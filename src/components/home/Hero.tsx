@@ -8,6 +8,7 @@ import InteractiveBackground from '../ui/InteractiveBackground';
 import styles from './Hero.module.css';
 
 import { MagneticText } from '../ui/magnetic-text';
+import AppStoreButtons from '../ui/AppStoreButtons';
 
 import LatestEventsHighlight from './LatestEventsHighlight';
 import InternshipCalendarCard from './InternshipCalendarCard';
@@ -73,13 +74,18 @@ export default function Hero() {
                     </div>
                 </div>
 
-                <div className={styles.ctas}>
-                    {/* TODO: Add Download CTA when mobile app launches */}
-                    <Link href="https://linkly.link/2WCTY" target="_blank" rel="noopener noreferrer">
-                        <Button variant="primary" icon={<ArrowRight size={20} />}>
+                <div className={`${styles.ctas} flex flex-col sm:flex-row items-center gap-4 sm:gap-2`}>
+                    <Link href="https://linkly.link/2WCTY" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                        <Button variant="primary" icon={<ArrowRight size={20} />} className="w-full sm:w-auto justify-center">
                             Join Community
                         </Button>
                     </Link>
+                    
+                    <div className="text-muted-foreground/50 font-medium px-2 py-2 sm:py-0">
+                        — or —
+                    </div>
+                    
+                    <AppStoreButtons variant="hero" />
                 </div>
 
             </div>

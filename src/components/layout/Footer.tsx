@@ -5,6 +5,7 @@ import logo from '@/assets/logo.png';
 import styles from './Footer.module.css';
 import { MagneticText } from '../ui/magnetic-text';
 import { siteConfig } from '@/config/siteConfig';
+import AppStoreButtons from '../ui/AppStoreButtons';
 
 export default function Footer() {
     return (
@@ -57,10 +58,14 @@ export default function Footer() {
                             <Link href="/updater" className={styles.link}>
                                 <RefreshCw size={16} /> Updater
                             </Link>
-                            {/* TODO: Add Download CTA when mobile app launches */}
                             <Link href="/source-code" className={styles.link}>
                                 <Code size={16} /> Source Code
                             </Link>
+                        </div>
+
+                        <div className="mt-8">
+                            <h4 className="text-sm font-semibold text-gray-400 mb-4">Get the App</h4>
+                            <AppStoreButtons variant="footer" className="flex-col !items-start" />
                         </div>
 
                         <div className="mt-8">
