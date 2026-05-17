@@ -65,3 +65,7 @@ Thumbs.db
 
 # Temp
 tmp/
+
+# Scripts & Config
+scripts/*.ps1
+.firebaserc
