@@ -58,13 +58,9 @@ This project leverages a modern and powerful technology stack:
 
 ## 📸 Screenshots
 
-*(Add your screenshots here)*
-
-| Home Page | Dashboard |
+| Home Page | Community |
 | :---: | :---: |
-| <img src="public/placeholder-home.png" alt="Home Page" width="400"/> | <img src="public/placeholder-dashboard.png" alt="Dashboard" width="400"/> |
-
-> **Note**: These are placeholders. Please upload actual screenshots to the `public/` folder and link them here.
+| <img src="public/screenshot-home.png" alt="Home Page" width="400"/> | <img src="public/screenshot-community.png" alt="Community" width="400"/> |
 
 ## 🏁 Getting Started
 
