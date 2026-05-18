@@ -21,6 +21,14 @@ import { db } from '@/lib/firebase';
 import { calculateLevel } from '@/lib/points';
 import { getEmbedUrl } from '@/lib/utils';
 
+/**
+ * UserProfile component renders the main dashboard profile page for authenticated developers.
+ * It manages:
+ * - Local layout state for editing avatars and bios.
+ * - Loading and sorting uploaded developer projects from Firestore.
+ * - Real-time calculations of gamification Dev Points, progress levels, and achievements.
+ * - Rendering animated progress rings and privacy toggle modals.
+ */
 export default function UserProfile() {
     const { user, logout, updateUserProfile } = useAuth();
     const router = useRouter();
@@ -37,6 +45,10 @@ export default function UserProfile() {
     const levelInfo = calculateLevel(user?.points || 0);
     const targetProgress = levelInfo.progress;
 
+    /**
+     * Triggers animated loading effect for the custom circular progress ring
+     * once the component is mounted.
+     */
     useEffect(() => {
         if (user) {
             const timer = setTimeout(() => {
