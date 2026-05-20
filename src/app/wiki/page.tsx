@@ -91,7 +91,7 @@ function highlightMatch(text: string, indices?: readonly [number, number][]) {
         lastIndex = end + 1;
     }
     result.push(text.slice(lastIndex));
-    return <span style={{ whiteSpace: 'normal' }}>{result}</span>;  {/* ← wrap in span */}
+    return <span style={{ whiteSpace: 'normal' }}>{result}</span>;
 }
 
     // Fuzzy search results (title + keywords + description)
@@ -101,16 +101,6 @@ function highlightMatch(text: string, indices?: readonly [number, number][]) {
     );
 
     const isSearching = searchQuery.trim().length > 0;
-
-    // Sidebar nav: filter by title only when searching (lightweight)
-    const filteredCategories = isSearching
-        ? categories.map(category => ({
-            ...category,
-            items: category.items.filter(item =>
-                item.title.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-        })).filter(category => category.items.length > 0)
-        : categories;
 
     // When user clicks a search result, open that article and clear search
     function handleResultSelect(id: string) {
@@ -194,7 +184,7 @@ function highlightMatch(text: string, indices?: readonly [number, number][]) {
                                         onClick={() => setActiveArticle(item.id)}
                                     >
                                         {item.icon}
-                                        {item.title}
+                                        {highlightMatch(item.title, matchMap.get(item.id))}
                                     </div>
                                 ))}
                             </div>
