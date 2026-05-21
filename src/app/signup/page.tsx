@@ -48,24 +48,6 @@ export default function SignupPage() {
 
     if (user) return null;
 
-    const checkIsAdminEmail = async (emailToCheck: string) => {
-        if (!emailToCheck) return;
-        try {
-            const adminDoc = await getDoc(doc(db, 'admins', emailToCheck));
-            if (adminDoc.exists()) {
-                setIsAdminSignup(true);
-            } else {
-                setIsAdminSignup(false);
-            }
-        } catch (err) {
-            console.error("Error checking admin email:", err);
-        }
-    };
-
-    const handleEmailBlur = () => {
-        checkIsAdminEmail(email);
-    };
-
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
@@ -179,15 +161,21 @@ export default function SignupPage() {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    onBlur={handleEmailBlur}
                                     className="w-full pl-10 pr-3 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                     placeholder="name@example.com"
                                     required
                                 />
                             </div>
-                            {isAdminSignup && (
-                                <p className="text-xs text-blue-500 mt-1">Admin email detected. Admin Key required.</p>
-                            )}
+                            <div className="flex items-center gap-2 mt-2">
+                                <input
+                                    type="checkbox"
+                                    id="isAdminToggle"
+                                    checked={isAdminSignup}
+                                    onChange={(e) => setIsAdminSignup(e.target.checked)}
+                                    className="rounded border-border text-primary focus:ring-primary"
+                                />
+                                <label htmlFor="isAdminToggle" className="text-sm text-muted-foreground cursor-pointer">Register as Admin</label>
+                            </div>
                         </div>
 
                         {isAdminSignup && (
