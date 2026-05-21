@@ -21,15 +21,31 @@ export default function SuperAdminLogin() {
 
     // Redirect if not Super Admin email (after login)
     useEffect(() => {
-        if (user && user.email !== SUPER_ADMIN_EMAIL) {
-            router.push('/');
-        } else if (user && user.email === SUPER_ADMIN_EMAIL) {
-            // Check session key
-            const sessionKey = sessionStorage.getItem('admin_session_key');
-            if (sessionKey) {
-                setIsAuthenticated(true);
+        const validateSession = async () => {
+            if (user && user.email !== SUPER_ADMIN_EMAIL) {
+                router.push('/');
+            } else if (user && user.email === SUPER_ADMIN_EMAIL) {
+                // Validate session key against Firestore
+                const sessionKey = sessionStorage.getItem('admin_session_key');
+                if (sessionKey) {
+                    try {
+                        const keyDoc = await getDoc(doc(db, 'superadmin_keys', 'config'));
+                        if (keyDoc.exists() && keyDoc.data().value === sessionKey) {
+                            setIsAuthenticated(true);
+                        } else {
+                            // Invalid or expired session key
+                            sessionStorage.removeItem('admin_session_key');
+                            setIsAuthenticated(false);
+                        }
+                    } catch (error) {
+                        console.error('Session validation failed:', error);
+                        sessionStorage.removeItem('admin_session_key');
+                        setIsAuthenticated(false);
+                    }
+                }
             }
-        }
+        };
+        validateSession();
     }, [user, router]);
 
     const handleLogin = async (e: React.FormEvent) => {

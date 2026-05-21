@@ -967,7 +967,18 @@ export default function AdminDashboard({ initialAuth = false }: AdminDashboardPr
             if (user.email === SUPER_ADMIN_EMAIL) {
                 const sessionKey = sessionStorage.getItem('admin_session_key');
                 if (sessionKey) {
-                    verifyAdminKey(sessionKey, true);
+                    try {
+                        const keyDoc = await getDoc(doc(db, 'superadmin_keys', 'config'));
+                        if (keyDoc.exists() && keyDoc.data().value === sessionKey) {
+                            verifyAdminKey(sessionKey, true);
+                        } else {
+                            // Invalid or expired session key
+                            sessionStorage.removeItem('admin_session_key');
+                        }
+                    } catch (error) {
+                        console.error('Session validation failed:', error);
+                        sessionStorage.removeItem('admin_session_key');
+                    }
                 }
                 return;
             }
