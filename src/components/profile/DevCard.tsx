@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import {
   Download, Link2, Check, MapPin, Calendar,
   Trophy, Zap, Flame, Star, Award, Github,
@@ -169,10 +169,11 @@ export default function DevCard({ user }: { user: any }) {
     } catch { /* silent */ }
   };
 
-  const container = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
-  const item = {
+  // ── Motion variants ───────────────────────────────────────────────────────
+  const container: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
+  const item: Variants = {
     hidden: { opacity: 0, y: 14 },
-    show:   { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.19, 1, 0.22, 1] as any } },
+    show:   { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.19, 1, 0.22, 1] as [number, number, number, number] } },
   };
 
   return (
@@ -226,8 +227,25 @@ export default function DevCard({ user }: { user: any }) {
             </motion.div>
             {topBadges.length > 0 && (
               <motion.div variants={item} className={styles.badgesSection}>
-                <span className={styles.sectionLabel}><Award size={11} /> Top Achievements</span>
-                <div className={styles.badgesRow}>{topBadges.map((b: any) => { const BadgeIcon = b.Icon; return (<span key={b.id} className={styles.badge} style={{ borderColor: `${b.color}33` }}><BadgeIcon size={12} color={b.color} strokeWidth={2.5} /><span>{b.name}</span></span>); })} {extraCount > 0 && <span className={styles.badgeMore}>+{extraCount} more</span>}</div>
+                <span className={styles.sectionLabel}>
+                  <Award size={11} /> Top Achievements
+                </span>
+                <div className={styles.badgesRow}>
+                  {topBadges.map((b: { id: string; name: string; Icon: React.ElementType; color: string }) => {
+                    const BadgeIcon = b.Icon;
+                    return (
+                      <span key={b.id} className={styles.badge} style={{ borderColor: `${b.color}33` }}>
+                        <BadgeIcon size={12} color={b.color} strokeWidth={2.5} />
+                        <span>{b.name}</span>
+                      </span>
+                    );
+                  })}
+                  {extraCount > 0 && (
+                    <span className={styles.badgeMore}>
+                      +{extraCount} more
+                    </span>
+                  )}
+                </div>
               </motion.div>
             )}
             {topLangs.length > 0 && (
