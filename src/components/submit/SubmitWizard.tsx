@@ -5,7 +5,7 @@ import { Check, Upload, ArrowRight, ArrowLeft } from 'lucide-react';
 import Button from '../ui/Button';
 import styles from './SubmitWizard.module.css';
 
-interface FormData {
+interface SubmitWizardFormData {
     title: string;
     description: string;
     primaryLanguage: string;
