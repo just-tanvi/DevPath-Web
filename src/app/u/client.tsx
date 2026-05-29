@@ -737,7 +737,7 @@ function ProfileContent() {
                                             <p className="line-clamp-2">{stripHtml(project.description)}</p>
                                             <button
                                                 onClick={() => setSelectedProject(project)}
-                                                className="text-primary text-xs font-medium hover:underline mt-1"
+                                                className="text-primary text-xs font-medium hover:underline hover:opacity-80 transition-all duration-200 mt-1"
                                             >
                                                 Read More
                                             </button>
@@ -762,7 +762,7 @@ function ProfileContent() {
                                             <div className="flex items-center gap-4">
                                                 <button
                                                     onClick={() => handleLikeProject(project.id, project.likes)}
-                                                    className={`flex items-center gap-1.5 text-sm transition-colors ${currentUser && project.likes.includes(currentUser.uid) ? 'text-red-500' : 'text-muted-foreground hover:text-red-500'}`}
+                                                    className={`flex items-center gap-1.5 text-sm transition-all duration-200 ${currentUser && project.likes.includes(currentUser.uid) ? 'text-red-500' : 'text-muted-foreground hover:text-red-500 hover:scale-105'}`}
                                                 >
                                                     <Heart size={16} fill={currentUser && project.likes.includes(currentUser.uid) ? "currentColor" : "none"} />
                                                     <span>{project.likes.length}</span>
@@ -790,7 +790,7 @@ function ProfileContent() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {user.achievements && user.achievements.length > 0 ? (
                                 user.achievements.map((badgeId, index) => (
-                                    <div key={index} className="flex items-center gap-4 p-4 bg-card border border-border rounded-xl">
+                                    <div key={index}  className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary hover:scale-105 transition-all duration-200">
                                         <div className="p-3 bg-primary/10 text-primary rounded-full">
                                             <Trophy size={24} />
                                         </div>
@@ -832,7 +832,7 @@ function ProfileContent() {
                                 <h2 className="text-xl font-bold truncate pr-4">{selectedProject.title}</h2>
                                 <button
                                     onClick={() => setSelectedProject(null)}
-                                    className="p-2 hover:bg-muted rounded-full transition-colors"
+                                    className="p-2 hover:bg-muted hover:scale-110 rounded-full transition-all duration-200"
                                 >
                                     <X size={20} />
                                 </button>
@@ -871,7 +871,7 @@ function ProfileContent() {
                                             href={selectedProject.websiteUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                                            className="flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 hover:scale-105 hover:shadow-md transition-all duration-200 font-medium text-sm"
                                         >
                                             <Globe size={16} /> Visit Website
                                         </a>
