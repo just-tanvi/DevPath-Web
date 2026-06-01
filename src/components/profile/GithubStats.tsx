@@ -1,3 +1,5 @@
+const STATS_URL = process.env.NEXT_PUBLIC_GITHUB_STATS_URL ?? 'https://github-readme-stats-salesp07.vercel.app';
+const STREAK_URL = process.env.NEXT_PUBLIC_GITHUB_STREAK_URL ?? 'https://github-readme-streak-stats-salesp07.vercel.app';
 import Image from 'next/image';
 import { BookOpen, Star, Users, GitMerge, Code2, Plus, Github } from 'lucide-react';
 import { GIT_FALLBACK_STATS } from '@/lib/github';
@@ -49,14 +51,14 @@ export default function GithubStats({ user }: { user: any }) {
                     <div className="w-full">
                         <Image
                             alt={`${user.githubStats.username} GitHub profile stats in dark theme`}
-                            src={`https://github-readme-stats-salesp07.vercel.app/api?username=${user.githubStats.username}&count_private=true&show_icons=true&title_color=00bfbf&icon_color=00bfbf&text_color=c9d1d9&bg_color=0d1117&rank_icon=github&border_radius=20&hide_border=true`}
+                            src={`${STATS_URL}/api?username=${user.githubStats.username}&count_private=true&show_icons=true&title_color=00bfbf&icon_color=00bfbf&text_color=c9d1d9&bg_color=0d1117&rank_icon=github&border_radius=20&hide_border=true`}
                             width={467}
                             height={195}
                             className="w-full h-auto hidden dark:block"
                         />
                         <Image
                             alt={`${user.githubStats.username} GitHub profile stats in light theme`}
-                            src={`https://github-readme-stats-salesp07.vercel.app/api?username=${user.githubStats.username}&count_private=true&show_icons=true&title_color=000000&icon_color=000000&text_color=000000&bg_color=ffffff&rank_icon=github&border_radius=20&hide_border=true`}
+                            src={`${STATS_URL}/api?username=${user.githubStats.username}&count_private=true&show_icons=true&title_color=000000&icon_color=000000&text_color=000000&bg_color=ffffff&rank_icon=github&border_radius=20&hide_border=true`}
                             width={467}
                             height={195}
                             className="w-full h-auto dark:hidden"
@@ -65,14 +67,14 @@ export default function GithubStats({ user }: { user: any }) {
                     <div className="w-full">
                         <Image
                             alt={`${user.githubStats.username} GitHub contribution streak in dark theme`}
-                            src={`https://github-readme-streak-stats-salesp07.vercel.app/?user=${user.githubStats.username}&count_private=true&border_radius=20&ring=00bfbf&stroke=c9d1d9&background=0d1117&fire=00bfbf&currStreakNum=00bfbf&sideNums=00bfbf&datesside=00bfbf&Labelscurr=00bfbf&currStreakLabel=00bfbf&sideLabels=00bfbf&dates=c9d1d9&border=c9d1d9&hide_border=true`}
+                            src={`${STREAK_URL}/?user=${user.githubStats.username}&count_private=true&border_radius=20&ring=00bfbf&stroke=c9d1d9&background=0d1117&fire=00bfbf&currStreakNum=00bfbf&sideNums=00bfbf&datesside=00bfbf&Labelscurr=00bfbf&currStreakLabel=00bfbf&sideLabels=00bfbf&dates=c9d1d9&border=c9d1d9&hide_border=true`}
                             width={467}
                             height={195}
                             className="w-full h-auto hidden dark:block"
                         />
                         <Image
                             alt={`${user.githubStats.username} GitHub contribution streak in light theme`}
-                            src={`https://github-readme-streak-stats-salesp07.vercel.app/?user=${user.githubStats.username}&count_private=true&border_radius=20&ring=000000&stroke=000000&background=ffffff&fire=ff0000&currStreakNum=000000&sideNums=000000&datesside=000000&Labelscurr=000000&currStreakLabel=000000&sideLabels=000000&dates=000000&border=000000&hide_border=true`}
+                            src={`${STREAK_URL}/?user=${user.githubStats.username}&count_private=true&border_radius=20&ring=000000&stroke=000000&background=ffffff&fire=ff0000&currStreakNum=000000&sideNums=000000&datesside=000000&Labelscurr=000000&currStreakLabel=000000&sideLabels=000000&dates=000000&border=000000&hide_border=true`}
                             width={467}
                             height={195}
                             className="w-full h-auto dark:hidden"

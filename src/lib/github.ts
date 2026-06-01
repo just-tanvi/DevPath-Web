@@ -1,5 +1,8 @@
+const GITHUB_API = process.env.NEXT_PUBLIC_GITHUB_API_BASE_URL ?? 'https://api.github.com';
+const DEVPATH_REPO = process.env.NEXT_PUBLIC_GITHUB_REPO ?? 'devpathindcommunity-india/DevPath-Web';
+const PER_PAGE = process.env.NEXT_PUBLIC_GITHUB_PER_PAGE ?? '100';
 export const fetchUserProfile = async (token: string) => {
-    const res = await fetch('https://api.github.com/user', {
+    const res = await fetch('${GITHUB_API}/user', {
         headers: {
             Authorization: `Bearer ${token}`,
             Accept: 'application/vnd.github.v3+json'
@@ -10,7 +13,7 @@ export const fetchUserProfile = async (token: string) => {
 };
 
 export const fetchUserRepos = async (token: string) => {
-    const res = await fetch('https://api.github.com/user/repos?sort=updated&per_page=100&type=all', {
+    const res = await fetch('${GITHUB_API}/user/repos?sort=updated&per_page=${PER_PAGE}&type=all', {
         headers: {
             Authorization: `Bearer ${token}`,
             Accept: 'application/vnd.github.v3+json'
@@ -22,7 +25,7 @@ export const fetchUserRepos = async (token: string) => {
 
 export const fetchUserActivity = async (username: string, token: string) => {
     // Note: Events API might not need token for public events, but better to use it for rate limits
-    const res = await fetch(`https://api.github.com/users/${username}/events?per_page=10`, {
+    const res = await fetch(`${GITHUB_API}/users/${username}/events?per_page=10`, {
         headers: {
             Authorization: `Bearer ${token}`,
             Accept: 'application/vnd.github.v3+json'
@@ -56,13 +59,13 @@ export const fetchRepoContributorStats = async (token?: string) => {
             headers['Authorization'] = `Bearer ${token}`;
         }
         
-        let res = await fetch('https://api.github.com/repos/devpathindcommunity-india/DevPath-Web/stats/contributors', { headers });
+        let res = await fetch('${GITHUB_API}/repos/${DEVPATH_REPO}/stats/contributors', { headers });
         
         // Handle 202 status code by doing a brief retry loop
         let retries = 0;
         while (res.status === 202 && retries < 3) {
             await new Promise(resolve => setTimeout(resolve, 1500));
-            res = await fetch('https://api.github.com/repos/devpathindcommunity-india/DevPath-Web/stats/contributors', { headers });
+            res = await fetch('${GITHUB_API}/repos/${DEVPATH_REPO}/stats/contributors', { headers });
             retries++;
         }
         

@@ -1,3 +1,4 @@
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://devpath-website.web.app';
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk, Barlow_Condensed } from "next/font/google";
 import { AuthProvider } from "@/context/AuthContext";
@@ -21,7 +22,7 @@ const barlowCondensed = Barlow_Condensed({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://devpath-website.web.app'),
+  metadataBase: new URL(APP_URL),
   title: {
     default: "DevPath Community",
     template: "%s | DevPath Community",
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://devpath-website.web.app",
+    url: APP_URL,
     title: "DevPath Community",
     description: "Join 50,000+ developers accelerating their coding skills through structured paths, real projects, and an active community.",
     siteName: "DevPath Community",
@@ -75,8 +76,8 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "DevPath Community",
-  "url": "https://devpath-website.web.app",
-  "logo": "https://devpath-website.web.app/DevPath-logo.webp",
+  "url": APP_URL,
+  "logo": `${APP_URL}/DevPath-logo.webp`,
   "sameAs": [
     "https://twitter.com/DevPath_Community",
     "https://www.linkedin.com/company/devpath-community",

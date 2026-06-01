@@ -1,5 +1,5 @@
 "use client";
-
+const AVATAR_FALLBACK = process.env.NEXT_PUBLIC_AVATAR_FALLBACK_URL ?? 'https://ui-avatars.com/api';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
@@ -348,7 +348,7 @@ useEffect(() => {
                         <div className="relative w-64 h-64 md:w-72 md:h-72 lg:w-full lg:h-auto lg:aspect-square mb-4 group">
                             <div className="w-full h-full rounded-full overflow-hidden border-4 border-card shadow-xl relative">
                                 <Image
-                                    src={user.photoURL || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                    src={user.photoURL || `${AVATAR_FALLBACK}/?name=${user.name}&background=random`}
                                     alt={user.name || 'User'}
                                     fill
                                     className="object-cover"
@@ -827,7 +827,7 @@ useEffect(() => {
                                 followersList.map(u => (
                                     <div key={u.uid} className="flex items-center gap-3 p-2 hover:bg-muted rounded-lg transition-colors">
                                         <Image
-                                            src={u.photoURL || `https://ui-avatars.com/api/?name=${u.name}&background=random`}
+                                            src={u.photoURL || `${AVATAR_FALLBACK}/?name=${u.name}&background=random`}
                                             alt={u.name}
                                             width={40}
                                             height={40}
@@ -872,7 +872,7 @@ useEffect(() => {
                                 followingList.map(u => (
                                     <div key={u.uid} className="flex items-center gap-3 p-2 hover:bg-muted rounded-lg transition-colors">
                                         <Image
-                                            src={u.photoURL || `https://ui-avatars.com/api/?name=${u.name}&background=random`}
+                                            src={u.photoURL || `${AVATAR_FALLBACK}/?name=${u.name}&background=random`}
                                             alt={u.name}
                                             width={40}
                                             height={40}

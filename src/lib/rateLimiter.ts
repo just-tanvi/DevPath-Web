@@ -10,7 +10,6 @@
  *   const result = rateLimit(request, { limit: 10, windowMs: 60_000 });
  *   if (!result.success) return result.response;
  */
-
 interface RateLimitEntry {
   /** Timestamps of requests within the current window (ms). */
   timestamps: number[];
@@ -72,7 +71,11 @@ export function rateLimit(
   request: Request,
   options: RateLimitOptions = {}
 ): RateLimitResult | RateLimitBlocked {
-  const { limit = 10, windowMs = 60_000, message = 'Too many requests. Please try again later.' } = options;
+  const {
+  limit = Number(process.env.RATE_LIMIT_MAX ?? 10),
+  windowMs = Number(process.env.RATE_LIMIT_WINDOW_MS ?? 60000),
+  message = 'Too many requests. Please try again later.'
+} = options;
 
   const ip = getIp(request);
   const now = Date.now();

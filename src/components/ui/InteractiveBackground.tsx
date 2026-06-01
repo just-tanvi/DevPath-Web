@@ -1,5 +1,5 @@
 "use client";
-
+const DEVPATH_API = process.env.NEXT_PUBLIC_DEVPATH_API_URL ?? 'https://api.devpath.in';
 import { useEffect, useRef } from 'react';
 import { useTheme } from 'next-themes';
 
@@ -55,7 +55,7 @@ const CODE_LINES = [
     'pip install knowledge',
     'docker build -t devpath .',
     'kubectl apply -f community.yaml',
-    'curl -X POST https://api.devpath.in/join',
+    'curl -X POST ${DEVPATH_API}/join',
     'chmod +x ./your_potential.sh',
     './launch_career.sh --mode=open-source',
 
