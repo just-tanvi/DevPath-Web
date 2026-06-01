@@ -1,3 +1,5 @@
+"use client";
+
 import {
     X,
     CheckCircle,
@@ -10,7 +12,6 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { useState, useEffect, useCallback, type ReactNode } from 'react';
-import { jsPDF } from 'jspdf';
 import { useGamification } from '@/context/GamificationContext';
 import QuizComponent from './QuizComponent';
 
@@ -94,170 +95,10 @@ export function RoadmapModal({
     }, []);
 
     const handleDownloadPDF = useCallback(async () => {
-        if (!roadmap) return;
-
-        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const margin = 16;
-        const contentWidth = pageWidth - margin * 2;
-        const bottomMargin = 18;
-        const footerHeight = 12;
-        const footerY = pageHeight - 10;
-
-        const slugify = (value: string) =>
-            value
-                .toLowerCase()
-                .trim()
-                .replace(/[^a-z0-9\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-');
-
-        const loadImageAsDataUrl = async (source: string) => {
-            const response = await fetch(source);
-            if (!response.ok) {
-                throw new Error(`Failed to load image: ${source}`);
-            }
-
-            const blob = await response.blob();
-
-            return await new Promise<string>((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    const result = reader.result;
-                    if (typeof result === 'string') {
-                        resolve(result);
-                    } else {
-                        reject(new Error('Unable to read logo image'));
-                    }
-                };
-                reader.onerror = () => reject(new Error('Unable to read logo image'));
-                reader.readAsDataURL(blob);
-            });
-        };
-
-        let currentPage = 1;
-        let cursorY = margin + 46;
-
-        const addFooter = (pageNumber: number) => {
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(9);
-            doc.setTextColor('#94a3b8');
-            doc.text(`Page ${pageNumber}`, pageWidth - margin, footerY, { align: 'right' });
-        };
-
-        const paintPageBackground = () => {
-            doc.setFillColor('#0f0f1a');
-            doc.rect(0, 0, pageWidth, pageHeight, 'F');
-        };
-
-        const ensureSpace = (requiredHeight: number) => {
-            if (cursorY + requiredHeight > pageHeight - bottomMargin - footerHeight) {
-                addFooter(currentPage);
-                doc.addPage();
-                currentPage += 1;
-                paintPageBackground();
-                cursorY = margin;
-                return true;
-            }
-
-            return false;
-        };
-
-        try {
-            let logoDataUrl: string | null = null;
-
-            try {
-                logoDataUrl = await loadImageAsDataUrl('/DevPath%20logo.png');
-            } catch (error) {
-                console.error('Logo load failed:', error);
-            }
-
-            paintPageBackground();
-
-            if (logoDataUrl) {
-                doc.addImage(logoDataUrl, 'PNG', margin, margin, 22, 22);
-            }
-
-            doc.setFillColor('#111827');
-            doc.roundedRect(margin + 28, margin, pageWidth - margin * 2 - 28, 22, 3, 3, 'F');
-
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(20);
-            doc.setTextColor('#00f5ff');
-            doc.text(roadmap.title, margin + 34, margin + 10, { maxWidth: pageWidth - margin * 2 - 40 });
-
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(10);
-            doc.setTextColor('#e2e8f0');
-            doc.text('Interactive Pathway Tutorial', margin + 34, margin + 17);
-
-            for (const phase of roadmap.phases) {
-                const phaseLabel = `${phase.title}  •  ${phase.duration}`;
-                const estimatedPhaseHeight = 20 + phase.items.reduce((total, item) => {
-                    const subtitleLines = doc.splitTextToSize(item.subtitle, contentWidth - 10);
-                    const pointLines = item.points.reduce((pointTotal, point) => {
-                        const wrapped = doc.splitTextToSize(point, contentWidth - 14);
-                        return pointTotal + wrapped.length + 1;
-                    }, 0);
-
-                    return total + subtitleLines.length * 5 + pointLines * 4.5 + 10;
-                }, 0);
-
-                ensureSpace(estimatedPhaseHeight + 8);
-
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(15);
-                doc.setTextColor('#7c3aed');
-                doc.text(phaseLabel, margin, cursorY, { maxWidth: contentWidth });
-                cursorY += 8;
-
-                doc.setDrawColor('#7c3aed');
-                doc.setLineWidth(0.4);
-                doc.line(margin, cursorY - 1, pageWidth - margin, cursorY - 1);
-
-                for (const item of phase.items) {
-                    const subtitleLines = doc.splitTextToSize(item.subtitle, contentWidth - 8);
-                    const subtitleHeight = subtitleLines.length * 5;
-                    ensureSpace(subtitleHeight + 8);
-
-                    doc.setFont('helvetica', 'bold');
-                    doc.setFontSize(11.5);
-                    doc.setTextColor('#00f5ff');
-                    doc.text(subtitleLines, margin + 2, cursorY + 5);
-                    cursorY += subtitleHeight + 2;
-
-                    doc.setFont('helvetica', 'normal');
-                    doc.setFontSize(10);
-                    doc.setTextColor('#e2e8f0');
-
-                    for (const point of item.points) {
-                        const wrappedPoint = doc.splitTextToSize(point, contentWidth - 12);
-                        const pointHeight = wrappedPoint.length * 4.8;
-                        ensureSpace(pointHeight + 4);
-
-                        doc.text('•', margin + 4, cursorY + 4);
-                        doc.text(wrappedPoint, margin + 10, cursorY + 4);
-                        cursorY += pointHeight + 1.5;
-                    }
-
-                    cursorY += 4;
-                }
-
-                cursorY += 4;
-            }
-
-            addFooter(currentPage);
-
-            const pageCount = doc.getNumberOfPages();
-            for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
-                doc.setPage(pageNumber);
-                addFooter(pageNumber);
-            }
-
-            doc.save(`${slugify(roadmap.title)}-roadmap.pdf`);
-        } catch (error) {
-            console.error('Failed to generate roadmap PDF:', error);
+        // PDF generation is disabled in this build run to avoid bundler issues
+        // with jspdf/html2canvas. Restore when a bundler-friendly approach is added.
+        if (typeof window !== 'undefined') {
+            alert('Roadmap PDF download is temporarily unavailable.');
         }
     }, [roadmap]);
 
@@ -406,7 +247,7 @@ export function RoadmapModal({
                         </div>
 
                         <div className="flex items-center gap-2">
-                            <button aria-label="Action button"
+                            <button
                                 onClick={handleDownloadPDF}
                                 aria-label="Download PDF"
                                 title="Download PDF"
@@ -415,8 +256,9 @@ export function RoadmapModal({
                                 <Download size={24} />
                             </button>
 
-                            <button aria-label="Action button"
+                            <button
                                 onClick={onClose}
+                                aria-label="Close roadmap modal"
                                 className="p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground"
                             >
                                 <X size={24} />

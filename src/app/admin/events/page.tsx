@@ -29,7 +29,7 @@ export default function AdminEventsPage() {
     const fetchEvents = async () => {
         setLoading(true);
         try {
-            const q = query(collection(db, 'events'), orderBy('date', 'asc'));
+            const q = query(collection(db!, 'events'), orderBy('date', 'asc'));
             const snapshot = await getDocs(q);
             setEvents(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
         } catch (error) {
@@ -43,9 +43,9 @@ export default function AdminEventsPage() {
         e.preventDefault();
         try {
             if (editingEvent) {
-                await updateDoc(doc(db, 'events', editingEvent.id), formData);
+                await updateDoc(doc(db!, 'events', editingEvent.id), formData);
             } else {
-                await addDoc(collection(db, 'events'), {
+                await addDoc(collection(db!, 'events'), {
                     ...formData,
                     createdAt: new Date().toISOString()
                 });
@@ -63,7 +63,7 @@ export default function AdminEventsPage() {
     const handleDelete = async (id: string) => {
         if (!confirm("Are you sure you want to delete this event?")) return;
         try {
-            await deleteDoc(doc(db, 'events', id));
+            await deleteDoc(doc(db!, 'events', id));
             fetchEvents();
         } catch (error) {
             console.error("Error deleting event:", error);

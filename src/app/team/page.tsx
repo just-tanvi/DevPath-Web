@@ -224,6 +224,12 @@ const rolePalette: Record<TeamMember['category'], string> = {
 
 const TeamTile = ({ member, index, stepClass = '' }: { member: TeamMember; index: number; stepClass?: string }) => {
     const shouldReduceMotion = useReducedMotion();
+    const [imageReady, setImageReady] = useState(!member.image);
+
+    useEffect(() => {
+        setImageReady(!member.image);
+    }, [member.image]);
+
     return (
         <BorderGlow
             className={stepClass}
@@ -241,13 +247,19 @@ const TeamTile = ({ member, index, stepClass = '' }: { member: TeamMember; index
                     clipPath: 'polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%)'
                 }}
             >
+                {!imageReady && (
+                    <div className="absolute inset-0 z-10 animate-pulse bg-slate-400/25" aria-hidden="true" />
+                )}
+
                 {member.image ? (
                     <Image
                         src={member.image}
                         alt={member.name}
                         fill
                         sizes="(max-width: 768px) 50vw, (max-width: 1280px) 25vw, 18vw"
-                        className="object-cover object-top grayscale-[35%] contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition duration-500"
+                        className={`object-cover object-top grayscale-[35%] contrast-110 group-hover:grayscale-0 group-hover:scale-105 transition duration-500 ${imageReady ? 'opacity-100' : 'opacity-0'}`}
+                        onLoad={() => setImageReady(true)}
+                        onError={() => setImageReady(true)}
                     />
                 ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center text-2xl font-bold text-white/80">
@@ -281,6 +293,12 @@ const ValueCard = ({
 
 const CoreRoleCard = ({ member, index }: { member: TeamMember; index: number }) => {
     const shouldReduceMotion = useReducedMotion();
+    const [imageReady, setImageReady] = useState(!member.image);
+
+    useEffect(() => {
+        setImageReady(!member.image);
+    }, [member.image]);
+
     return (
     <BorderGlow
         glowColor="168 85 247"
@@ -296,13 +314,19 @@ const CoreRoleCard = ({ member, index }: { member: TeamMember; index: number }) 
             style={{ clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)' }}
         >
             <div className="relative h-48 sm:h-52 bg-[#0b1430] overflow-hidden">
+                {!imageReady && (
+                    <div className="absolute inset-0 z-10 animate-pulse bg-slate-400/25" aria-hidden="true" />
+                )}
+
                 {member.image ? (
                     <Image
                         src={member.image}
                         alt={member.name}
                         fill
                         sizes="(max-width: 640px) 100vw, 260px"
-                        className="object-cover"
+                        className={`${imageReady ? 'opacity-100' : 'opacity-0'} object-cover transition-opacity duration-500`}
+                        onLoad={() => setImageReady(true)}
+                        onError={() => setImageReady(true)}
                     />
                 ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center">
@@ -338,6 +362,11 @@ export default function TeamPage() {
 
     const coreAdmins = teamMembers.filter(member => member.category === 'Core Admin');
     const heads = teamMembers.filter(member => member.category === 'Head');
+    const [ownerImageReady, setOwnerImageReady] = useState(!owner?.image);
+
+    useEffect(() => {
+        setOwnerImageReady(!owner?.image);
+    }, [owner?.image]);
 
     // keep all left tiles on the same top baseline (no staircase offsets)
     const leftStepPattern = ['mt-0', 'mt-0', 'mt-0', 'mt-0'];
@@ -403,8 +432,20 @@ export default function TeamPage() {
                                         edgeSensitivity={22}
                                     >
                                         <div className="relative w-52 h-52 sm:w-56 sm:h-56 rounded-xl overflow-hidden">
+                                            {!ownerImageReady && (
+                                                <div className="absolute inset-0 z-10 animate-pulse bg-slate-400/25" aria-hidden="true" />
+                                            )}
+
                                             {owner.image ? (
-                                                <Image src={owner.image} alt={owner.name} fill className="object-cover" sizes="224px" />
+                                                <Image
+                                                    src={owner.image}
+                                                    alt={owner.name}
+                                                    fill
+                                                    className={`${ownerImageReady ? 'opacity-100' : 'opacity-0'} object-cover transition-opacity duration-500`}
+                                                    sizes="224px"
+                                                    onLoad={() => setOwnerImageReady(true)}
+                                                    onError={() => setOwnerImageReady(true)}
+                                                />
                                             ) : (
                                                 <div className="w-full h-full bg-slate-700 flex items-center justify-center text-white text-3xl font-bold">{getInitials(owner.name)}</div>
                                             )}
