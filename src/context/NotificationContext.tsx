@@ -26,10 +26,14 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
     const [toasts, setToasts] = useState<Toast[]>([]);
 
+    const removeToast = useCallback((id: string) => {
+        setToasts(prev => prev.filter(toast => toast.id !== id));
+    }, []);
+
     const showToast = useCallback((message: string, type: NotificationType, duration = 5000) => {
         const id = `toast-${Date.now()}-${Math.random()}`;
         const newToast: Toast = { id, message, type, duration };
-        
+
         setToasts(prev => [...prev, newToast]);
 
         // Auto-remove after duration if duration > 0
@@ -38,11 +42,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         }
 
         return id;
-    }, []);
-
-    const removeToast = useCallback((id: string) => {
-        setToasts(prev => prev.filter(toast => toast.id !== id));
-    }, []);
+    }, [removeToast]);
 
     const showError = useCallback((message: string, duration?: number) => {
         return showToast(message, 'error', duration ?? 6000);

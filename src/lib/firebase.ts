@@ -32,8 +32,11 @@ if (!app) {
     console.warn('Firebase is not configured. Running in local UI-only mode without Firebase auth or Firestore.');
 }
 
-const db: Firestore | null = app ? getFirestore(app) : null;
-const auth: Auth = app ? getAuth(app) : ({ currentUser: null } as Auth);
+// For build-time typing we export `db` as a Firestore instance. At runtime
+// `app` may be null when Firebase isn't configured; in that case we provide
+// a minimal cast to satisfy TypeScript while keeping runtime behavior safe.
+const db: Firestore = app ? getFirestore(app) as Firestore : (null as unknown as Firestore);
+const auth: Auth = app ? getAuth(app) as Auth : ({} as Auth);
 const firebaseAvailable = Boolean(app);
 
 export { db, auth, firebaseAvailable };

@@ -37,7 +37,7 @@ function Model({ color }: { color: string }) {
         let maxVolume = 0;
         let largestMeshId = '';
 
-        scene.traverse((child) => {
+        scene.traverse((child: any) => {
             if ((child as THREE.Mesh).isMesh) {
                 const mesh = child as THREE.Mesh;
                 if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
@@ -61,7 +61,7 @@ function Model({ color }: { color: string }) {
         const createdMaterials: THREE.MeshStandardMaterial[] = [];
 
         // Second pass: apply materials
-        scene.traverse((child) => {
+        scene.traverse((child: any) => {
             if ((child as THREE.Mesh).isMesh) {
                 const mesh = child as THREE.Mesh;
                 const isBackground = mesh.uuid === largestMeshId;
@@ -85,7 +85,7 @@ function Model({ color }: { color: string }) {
                     opacity: 0.9
                 });
 
-                material.onBeforeCompile = (shader) => {
+                material.onBeforeCompile = (shader: any) => {
                     shader.uniforms.colorFront = { value: new THREE.Color(frontColor) };
                     shader.uniforms.colorSide = { value: new THREE.Color(sideColor) };
 
@@ -172,7 +172,7 @@ function FallbackGeometry({ color }: { color: string }) {
             if (mesh) {
                 mesh.geometry.dispose();
                 if (Array.isArray(mesh.material)) {
-                    mesh.material.forEach((m) => m.dispose());
+                    mesh.material.forEach((m: any) => m.dispose());
                 } else {
                     mesh.material.dispose();
                 }

@@ -57,6 +57,133 @@
   color: var(--devcard-text);
 }
 
+.skeletonCard {
+  overflow: hidden;
+}
+
+.skeletonCard::before,
+.skeletonCard::after {
+  display: none;
+}
+
+.pulse {
+  animation: skeletonPulse 1.3s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+.skeletonCircle,
+.skeletonLine,
+.skeletonPill,
+.skeletonProgressBar,
+.skeletonStat,
+.skeletonBadge,
+.skeletonBtn {
+  background: rgba(148, 163, 184, 0.35);
+}
+
+:global(.dark) .skeletonCircle,
+:global(.dark) .skeletonLine,
+:global(.dark) .skeletonPill,
+:global(.dark) .skeletonProgressBar,
+:global(.dark) .skeletonStat,
+:global(.dark) .skeletonBadge,
+:global(.dark) .skeletonBtn {
+  background: rgba(148, 163, 184, 0.25);
+}
+
+.skeletonCircle {
+  width: 84px;
+  height: 84px;
+  border-radius: 999px;
+}
+
+.skeletonLine {
+  height: 12px;
+  border-radius: 999px;
+}
+
+.skeletonName {
+  width: 72%;
+  margin-top: 4px;
+}
+
+.skeletonPill {
+  width: 52%;
+  height: 20px;
+  border-radius: 999px;
+}
+
+.skeletonMeta {
+  width: 86%;
+}
+
+.skeletonProgressWrap {
+  width: 100%;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeletonProgressLabel {
+  width: 42%;
+  height: 10px;
+}
+
+.skeletonProgressBar {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+}
+
+.skeletonStat {
+  border-radius: 14px;
+  min-height: 84px;
+}
+
+.skeletonSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeletonSectionTitle {
+  width: 34%;
+  height: 10px;
+}
+
+.skeletonBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skeletonBadge {
+  width: 92px;
+  height: 24px;
+  border-radius: 999px;
+}
+
+.skeletonFooterLeft {
+  width: 170px;
+  height: 10px;
+}
+
+.skeletonFooterRight {
+  width: 82px;
+  height: 10px;
+}
+
+.skeletonBtn {
+  width: 156px;
+  height: 40px;
+  border-radius: 12px;
+}
+
 :global(.dark) .card {
   --devcard-surface-start: #0d1117;
   --devcard-surface-mid: #0a0e27;
