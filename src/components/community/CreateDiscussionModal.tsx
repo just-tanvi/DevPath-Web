@@ -91,7 +91,7 @@ export default function CreateDiscussionModal({ isOpen, onClose, userId, userNam
                     <div>
                         <div className="flex justify-between items-center mb-2">
                             <label className="block text-sm font-medium">Content</label>
-                            <div className="flex bg-muted rounded-lg p-1">
+                            <div className="flex bg-secondary border border-border/30 rounded-lg p-1">
                                 <button aria-label="Action button" 
                                     type="button"
                                     onClick={() => setContentTab('write')}
@@ -118,7 +118,7 @@ export default function CreateDiscussionModal({ isOpen, onClose, userId, userNam
                                 required
                             />
                         ) : (
-                            <div className="w-full bg-background border border-border rounded-lg px-4 py-2 min-h-[200px] prose prose-invert max-w-none text-sm overflow-y-auto">
+                            <div className="w-full bg-background border border-border rounded-lg px-4 py-2 min-h-[200px] markdown-body overflow-y-auto">
                                 {content ? (
                                     <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
                                         {DOMPurify.sanitize(content)}
