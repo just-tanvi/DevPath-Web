@@ -122,7 +122,7 @@ export function ProjectCard({ project }: { project: Project }) {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-[#0f1419] border border-black/10 dark:border-white/10 rounded-2xl p-8 z-[2000] shadow-2xl"
+                            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-surface-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 z-[2000] shadow-2xl"
                         >
                             {/* Close button */}
                             <button aria-label="Action button" 

@@ -138,13 +138,13 @@ const filteredProjects = useMemo(() => {
                         <div className="flex bg-gray-200 dark:bg-white/5 rounded-lg p-1">
                             <button aria-label="Action button"
                                 onClick={() => setSortOption('newest')}
-                                className={`px-3 py-1 text-xs font-medium rounded-md transition-all mr-1 ${sortOption === 'newest' ? 'bg-background shadow-sm text-foreground' : 'text-foreground hover:bg-[#dadbdd] dark:hover:bg-white/5'}`}
+                                className={`px-3 py-1 text-xs font-medium rounded-md transition-all mr-1 ${sortOption === 'newest' ? 'bg-background shadow-sm text-foreground' : 'text-foreground hover:bg-slate-200 dark:hover:bg-white/5'}`}
                             >
                                 Newest
                             </button>
                             <button aria-label="Action button"
                                 onClick={() => setSortOption('popular')}
-                                className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${sortOption === 'popular' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                                className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${sortOption === 'popular' ? 'bg-background shadow-sm text-foreground' : 'text-foreground hover:bg-slate-200 dark:hover:bg-white/5'}`}
                             >
                                 Popular
                             </button>
