@@ -2,6 +2,10 @@
 
 import React, { useState } from "react";
 import styles from "./SkillTreeVisualizer.module.css";
+import { useLearningProgress } from "@/hooks/useLearningProgress";
+import { useAuth } from "@/context/AuthContext";
+import { CheckSquare, Square, Flame, Target } from "lucide-react";
+import { motion } from "framer-motion";
 
 type SkillNode = {
   id: string;
@@ -28,28 +32,80 @@ const pathsData: Record<string, SkillNode[]> = {
 };
 
 export default function SkillTreeVisualizer() {
+  const { user } = useAuth();
+  const { completedNodes, loading, toggleNode, isNodeCompleted } = useLearningProgress();
   const [activePath, setActivePath] = useState<"Frontend" | "Backend">("Frontend");
   const [selectedNode, setSelectedNode] = useState<SkillNode | null>(null);
 
   const nodes = pathsData[activePath];
 
+  // Dynamic progress calculation
+  const completedCount = nodes.filter(node => isNodeCompleted(activePath, node.id)).length;
+  const progressPercent = nodes.length > 0 ? Math.round((completedCount / nodes.length) * 100) : 0;
+
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} w-full flex flex-col items-center bg-[#0f1115] p-6 rounded-xl border border-slate-800`}>
+      
+      {/* Dynamic Progress Bar Panel */}
+      <div className="w-full max-w-[800px] mb-8 bg-slate-900/40 border border-slate-800/80 rounded-xl p-5 shadow-xl relative overflow-hidden backdrop-blur-md">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+              <Flame className="text-orange-500 animate-pulse animate-duration-1000" size={20} />
+              {activePath} Roadmap Progress
+            </h3>
+            <p className="text-xs text-slate-400">
+              {user 
+                ? "Your learning progress is synced automatically to your account in real-time." 
+                : "Sign in to save and sync your learning progress."
+              }
+            </p>
+          </div>
+          <div className="text-left sm:text-right flex flex-col sm:items-end gap-1">
+            <span className="text-sm font-semibold text-green-400 font-mono">
+              Progress: {progressPercent}% Completed
+            </span>
+            <span className="text-xs text-slate-500 font-mono">
+              {completedCount} of {nodes.length} nodes mastered
+            </span>
+          </div>
+        </div>
+
+        {/* Progress Bar Container */}
+        <div className="mt-4 h-2.5 w-full bg-slate-800 rounded-full overflow-hidden relative">
+          <motion.div
+            className="h-full bg-gradient-to-r from-emerald-500 to-green-400 rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: `${progressPercent}%` }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          />
+        </div>
+      </div>
+
+      {/* Path Selector Controls */}
       <div className={styles.controls}>
         <button aria-label="Action button"  
           className={`${styles.pathBtn} ${activePath === "Frontend" ? styles.active : ""}`}
-          onClick={() => setActivePath("Frontend")}
+          onClick={() => {
+            setActivePath("Frontend");
+            setSelectedNode(null);
+          }}
         >
           Frontend Path
         </button>
         <button aria-label="Action button"  
           className={`${styles.pathBtn} ${activePath === "Backend" ? styles.active : ""}`}
-          onClick={() => setActivePath("Backend")}
+          onClick={() => {
+            setActivePath("Backend");
+            setSelectedNode(null);
+          }}
         >
           Backend Path
         </button>
       </div>
 
+      {/* Roadmap Visualization Tree Area */}
       <div className={styles.treeArea}>
         {/* SVG Lines connecting nodes */}
         <svg className={styles.svgLines}>
@@ -57,6 +113,11 @@ export default function SkillTreeVisualizer() {
             node.connections.map(targetId => {
               const targetNode = nodes.find(n => n.id === targetId);
               if (!targetNode) return null;
+              
+              const isSourceCompleted = isNodeCompleted(activePath, node.id);
+              const isTargetCompleted = isNodeCompleted(activePath, targetId);
+              const isActiveLine = isSourceCompleted && isTargetCompleted;
+
               return (
                 <line 
                   key={`${node.id}-${targetId}`}
@@ -64,7 +125,10 @@ export default function SkillTreeVisualizer() {
                   y1={`${node.y}%`} 
                   x2={`${targetNode.x}%`} 
                   y2={`${targetNode.y}%`} 
-                  className={`${styles.line} ${selectedNode?.id === node.id || selectedNode?.id === targetId ? styles.active : ""}`}
+                  className={`${styles.line} ${isActiveLine ? styles.active : ""}`}
+                  style={{
+                    stroke: isActiveLine ? "#2ea043" : undefined
+                  }}
                 />
               );
             })
@@ -72,25 +136,85 @@ export default function SkillTreeVisualizer() {
         </svg>
 
         {/* Nodes */}
-        {nodes.map(node => (
-          <div
-            key={node.id}
-            className={`${styles.node} ${selectedNode?.id === node.id ? styles.completed : ""}`}
-            style={{ left: `${node.x}%`, top: `${node.y}%` }}
-            onClick={() => setSelectedNode(node)}
-          >
-            {node.label}
-          </div>
-        ))}
+        {nodes.map(node => {
+          const isCompleted = isNodeCompleted(activePath, node.id);
+          const isSelected = selectedNode?.id === node.id;
+
+          return (
+            <div
+              key={node.id}
+              className={`${styles.node} transition-all duration-300`}
+              style={{ 
+                left: `${node.x}%`, 
+                top: `${node.y}%`,
+                borderColor: isSelected ? "#58a6ff" : (isCompleted ? "#2ea043" : "#30363d"),
+                color: isCompleted ? "#2ea043" : "#c9d1d9",
+                boxShadow: isSelected ? "0 0 20px rgba(88, 166, 255, 0.4)" : (isCompleted ? "0 0 10px rgba(46, 160, 67, 0.15)" : undefined)
+              }}
+              onClick={() => setSelectedNode(node)}
+            >
+              <div className="flex flex-col items-center justify-center w-full h-full p-1 select-none">
+                {user && (
+                  <button
+                    aria-label="Toggle node complete status"
+                    className="mb-1 hover:scale-110 active:scale-95 transition-transform"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleNode(activePath, node.id);
+                    }}
+                  >
+                    {isCompleted ? (
+                      <CheckSquare size={15} className="text-emerald-500" />
+                    ) : (
+                      <Square size={15} className="text-slate-500" />
+                    )}
+                  </button>
+                )}
+                <span className="text-[9px] leading-tight font-semibold text-center tracking-wide">{node.label}</span>
+              </div>
+            </div>
+          );
+        })}
 
         {/* Side Drawer */}
         <div className={`${styles.drawer} ${selectedNode ? styles.open : ""}`}>
           {selectedNode && (
-            <>
-              <button aria-label="Action button"  className={styles.closeBtn} onClick={() => setSelectedNode(null)}>✖</button>
-              <h2 className={styles.drawerTitle}>{selectedNode.label}</h2>
-              <p className={styles.drawerDesc}>{selectedNode.desc}</p>
-            </>
+            <div className="flex flex-col h-full justify-between">
+              <div>
+                <button aria-label="Action button" className={styles.closeBtn} onClick={() => setSelectedNode(null)}>✖</button>
+                <h2 className={`${styles.drawerTitle} flex items-center gap-2`}>
+                  <Target size={20} className="text-blue-400" />
+                  {selectedNode.label}
+                </h2>
+                <p className={styles.drawerDesc}>{selectedNode.desc}</p>
+              </div>
+
+              {user && (
+                <div className="mt-auto pt-6 border-t border-slate-800/80">
+                  <button
+                    aria-label="Toggle node completion from drawer"
+                    onClick={() => toggleNode(activePath, selectedNode.id)}
+                    className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border font-semibold text-sm transition-all duration-200 ${
+                      isNodeCompleted(activePath, selectedNode.id)
+                        ? "bg-emerald-950/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-950/40"
+                        : "bg-slate-900 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white"
+                    }`}
+                  >
+                    {isNodeCompleted(activePath, selectedNode.id) ? (
+                      <>
+                        <CheckSquare size={18} className="text-emerald-400" />
+                        <span>Mark as Incomplete</span>
+                      </>
+                    ) : (
+                      <>
+                        <Square size={18} className="text-slate-400" />
+                        <span>Mark as Completed</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
