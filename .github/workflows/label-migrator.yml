@@ -20,7 +20,7 @@ jobs:
               console.log("No PR body found");
               return;
             }
-            
+
             // Regex to find linked issues like "Fixes #123", "Resolves #123", "Closes #123"
             const issueRegex = /(?:fix(?:e[sd])?|resolve[sd]?|close[sd]?)\s+#(\d+)/gi;
             let match;
@@ -28,16 +28,16 @@ jobs:
             while ((match = issueRegex.exec(prBody)) !== null) {
               issueNumbers.push(parseInt(match[1]));
             }
-            
+
             if (issueNumbers.length === 0) {
               console.log("No linked issues found in PR body");
               return;
             }
-            
+
             console.log(`Found linked issues: ${issueNumbers.join(", ")}`);
-            
+
             const labelsToAdd = new Set();
-            
+
             for (const issueNumber of issueNumbers) {
               try {
                 const issue = await github.rest.issues.get({
@@ -53,7 +53,7 @@ jobs:
                 console.log(`Could not fetch issue #${issueNumber}: ${error.message}`);
               }
             }
-            
+
             if (labelsToAdd.size > 0) {
               console.log(`Adding labels: ${Array.from(labelsToAdd).join(", ")}`);
               await github.rest.issues.addLabels({
