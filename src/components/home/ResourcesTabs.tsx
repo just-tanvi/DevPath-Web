@@ -505,7 +505,6 @@ export default function ResourcesTabs() {
           const isActive = activeMainTab === section.id;
           return (
             <button
-              aria-label="Action button"
               key={section.id}
               onClick={() => setActiveMainTab(section.id)}
               className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all border ${
@@ -537,7 +536,6 @@ export default function ResourcesTabs() {
 
                 return (
                   <button
-                    aria-label="Action button"
                     key={catKey}
                     onClick={() => setActiveSubTab(catKey)}
                     className={`px-4 py-2 rounded-xl text-sm font-medium transition-all relative overflow-hidden ${
@@ -615,7 +613,6 @@ export default function ResourcesTabs() {
                           {prompt.example}
                         </div>
                         <button
-                          aria-label="Action button"
                           className="w-full mt-4 py-2 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-lg transition-colors border border-white/10 hover:border-white/20 flex items-center justify-center gap-2 group/btn"
                         >
                           Try this Prompt
@@ -722,7 +719,6 @@ export default function ResourcesTabs() {
                             {resource.rating}
                           </div>
                           <button
-                            aria-label="Action button"
                             className={`${styles.action} ${resource.status === 'coming_soon' ? 'opacity-50 cursor-not-allowed' : ''}`}
                             onClick={() =>
                               resource.status !== 'coming_soon' &&
