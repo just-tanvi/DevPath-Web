@@ -335,8 +335,8 @@ export default function UserProfile() {
       const users = await Promise.all(
         uids.map(async (uid) => {
           // Try members first
-          let docRef = doc(db, 'members', uid);
-          let snap = await getDoc(docRef);
+          const docRef = doc(db, 'members', uid);
+          const snap = await getDoc(docRef);
 
           if (snap.exists()) {
             return { uid: snap.id, ...snap.data() };
@@ -559,9 +559,7 @@ export default function UserProfile() {
                     try {
                       const createdAt = user.createdAt as any;
                       const d = new Date(
-                        createdAt.seconds
-                          ? createdAt.seconds * 1000
-                          : createdAt
+                        createdAt.seconds ? createdAt.seconds * 1000 : createdAt
                       );
                       if (isNaN(d.getTime())) return 'Dec 2023';
                       return d.toLocaleDateString(undefined, {
@@ -967,7 +965,11 @@ export default function UserProfile() {
             </div>
 
             {loadingProjects ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6" aria-busy="true" aria-label="Loading projects">
+              <div
+                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                aria-busy="true"
+                aria-label="Loading projects"
+              >
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div
                     key={i}
@@ -1097,19 +1099,26 @@ export default function UserProfile() {
 
             <div className="flex-1 overflow-y-auto space-y-4 min-h-[200px]">
               {isLoadingFollowers ? (
-  <div className="space-y-4" aria-busy="true" aria-label="Loading followers">
-    {Array.from({ length: 5 }).map((_, i) => (
-      <div key={i} className="flex items-center gap-3 p-2 animate-pulse">
-        <div className="w-10 h-10 rounded-full bg-muted/40 flex-shrink-0" />
-        <div className="flex-1 space-y-2">
-          <div className="h-4 w-2/5 rounded bg-muted/40" />
-          <div className="h-3 w-1/4 rounded bg-muted/30" />
-        </div>
-        <div className="h-6 w-14 rounded-full bg-muted/30 flex-shrink-0" />
-      </div>
-    ))}
-  </div>
-) : followersList.length === 0 ? (
+                <div
+                  className="space-y-4"
+                  aria-busy="true"
+                  aria-label="Loading followers"
+                >
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 p-2 animate-pulse"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-muted/40 flex-shrink-0" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 w-2/5 rounded bg-muted/40" />
+                        <div className="h-3 w-1/4 rounded bg-muted/30" />
+                      </div>
+                      <div className="h-6 w-14 rounded-full bg-muted/30 flex-shrink-0" />
+                    </div>
+                  ))}
+                </div>
+              ) : followersList.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   No followers yet.
                 </div>
@@ -1169,19 +1178,26 @@ export default function UserProfile() {
 
             <div className="flex-1 overflow-y-auto space-y-4 min-h-[200px]">
               {isLoadingFollowing ? (
-  <div className="space-y-4" aria-busy="true" aria-label="Loading following">
-    {Array.from({ length: 5 }).map((_, i) => (
-      <div key={i} className="flex items-center gap-3 p-2 animate-pulse">
-        <div className="w-10 h-10 rounded-full bg-muted/40 flex-shrink-0" />
-        <div className="flex-1 space-y-2">
-          <div className="h-4 w-2/5 rounded bg-muted/40" />
-          <div className="h-3 w-1/4 rounded bg-muted/30" />
-        </div>
-        <div className="h-6 w-14 rounded-full bg-muted/30 flex-shrink-0" />
-      </div>
-    ))}
-  </div>
-) : followingList.length === 0 ? (
+                <div
+                  className="space-y-4"
+                  aria-busy="true"
+                  aria-label="Loading following"
+                >
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 p-2 animate-pulse"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-muted/40 flex-shrink-0" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 w-2/5 rounded bg-muted/40" />
+                        <div className="h-3 w-1/4 rounded bg-muted/30" />
+                      </div>
+                      <div className="h-6 w-14 rounded-full bg-muted/30 flex-shrink-0" />
+                    </div>
+                  ))}
+                </div>
+              ) : followingList.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   Not following anyone yet.
                 </div>
